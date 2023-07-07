@@ -27,7 +27,7 @@ export const register = async(req,res) => {
         // Code for adding node in Neo4j databse.
 
         session
-        .run( `CREATE (a:User {name: '${userName}'})` )
+        .run( `CREATE (a:User {name: '${userName}'})` )    // CREATE p = (:User {name:'user1'})-[:KNOWS]->(:User {name: 'user2'})  RETURN p // for creating relationships.
         .then( function()
         {
           driver.close();
