@@ -1,4 +1,12 @@
 import User from "../model/user.js";
+import neo4j from 'neo4j-driver';
+import dotenv from "dotenv";
+
+dotenv .config();
+
+
+var driver = neo4j.driver(process.env.NEO4J_URL, neo4j.auth.basic("neo4j", process.env.NEO4J_PASS));
+var session = driver.session();
 
 // REGISTER USER 
 export const register = async(req,res) => {
@@ -15,6 +23,18 @@ export const register = async(req,res) => {
             email,
             password
         });
+
+        // Code for adding node in Neo4j databse.
+
+        session
+        .run( `CREATE (a:User {name: '${userName}'})` )
+        .then( function()
+        {
+          driver.close();
+      
+        })  // Neo4j part end here.
+
+        
 
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
