@@ -13,7 +13,11 @@ export const knows = async(req,res) => {
         // Code for adding node in Neo4j databse.
 
         session
-        .run( `CREATE p = (:User {name:'${req.params.userone}'})-[:KNOWS]->(:User {name: '${req.params.usertwo}'})` )    // CREATE p = (:User {name:'user1'})-[:KNOWS]->(:User {name: 'user2'})  RETURN p // for creating relationships.
+        .run( `
+            MATCH (a:User {name: '${req.params.userone}'})
+            MATCH (b:User {name: '${req.params.usertwo}'})
+            CREATE (a)-[:KNOWS]->(b)
+        ` )    // CREATE p = (:User {name:'user1'})-[:KNOWS]->(:User {name: 'user2'})  RETURN p // for creating relationships.
         .then( function()
         {
           driver.close();
