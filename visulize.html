@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Neo4j Data Visualization</title>
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *;**script-src 'self' http://onlineerp.solution.quebec 'unsafe-inline' 'unsafe-eval';** "> -->
     <style>
         #viz {
             width: 800px;
@@ -20,7 +19,7 @@
             var config = {
             containerId: "viz",
             neo4j: {
-                serverUrl: "<YOUR_INSTANCE_URI_WITHOUT_'+s'>",
+                serverUrl: "<YOUR_URI_WITHOUT+S>",
                 serverUser: "neo4j",
                 serverPassword: "<PASSWORD>",
                 driverConfig: { 
@@ -29,22 +28,33 @@
                     }   
             },
             labels: {
-                Character: {
-                    label: "userName",
-                    // value: "pagerank",
-                    // group: "community",
-                    [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
-                        function: {
-                            title: (node) => viz.nodeToHtml(node, [
-                                "name",
-                                "pagerank"
-                            ])
-                        }
+                User: {
+            label: 'name',
+            // group: 'community',
+            // caption:true,
+            [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+                  "static": {
+                    "color": "lightgreen",
+                    "shape": "dot",
+                    "value": 10,
+                    "font": {
+                      "color": "black",
+                      "background": "none",
+                      "strokeWidth": "0",
+                      "size": "15"
                     }
-                }
+                },
+            //   cypher: {
+            //     value: 'MATCH (n) WHERE id(n) = $id RETURN n.size',
+            //   },
+              function: {
+                title: NeoVis.objectToTitleHtml,
+              },
+            },
+          },
             },
             relationships: {
-                INTERACTS: {
+                KNOWS: {
                     value: "weight"
                 }
             },
