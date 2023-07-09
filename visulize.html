@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neo4j Data Visualization</title>
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *;**script-src 'self' http://onlineerp.solution.quebec 'unsafe-inline' 'unsafe-eval';** "> -->
+    <style>
+        #viz {
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+    
+    <script src="https://unpkg.com/neovis.js@2.0.2"></script>
+
+    <script type="text/javascript">
+
+        let neoViz;
+    
+        function draw() {
+            var config = {
+            containerId: "viz",
+            neo4j: {
+                serverUrl: "<YOUR_INSTANCE_URI_WITHOUT_'+s'>",
+                serverUser: "neo4j",
+                serverPassword: "<PASSWORD>",
+                driverConfig: { 
+                    encrypted: "ENCRYPTION_ON",
+                    trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"
+                    }   
+            },
+            labels: {
+                Character: {
+                    label: "userName",
+                    // value: "pagerank",
+                    // group: "community",
+                    [NeoVis.NEOVIS_ADVANCED_CONFIG]: {
+                        function: {
+                            title: (node) => viz.nodeToHtml(node, [
+                                "name",
+                                "pagerank"
+                            ])
+                        }
+                    }
+                }
+            },
+            relationships: {
+                INTERACTS: {
+                    value: "weight"
+                }
+            },
+            initialCypher: "MATCH p=()-[:KNOWS]->() RETURN p LIMIT 25"
+        };
+
+        neoViz = new NeoVis.default(config);
+        neoViz.render();
+    }
+    </script>
+</head>
+<body onload="draw()">
+    <div id="viz"></div>
+    <h1>GRAPH</h1>
+    
+</body>
+</html> 
